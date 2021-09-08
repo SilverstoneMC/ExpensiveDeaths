@@ -1,0 +1,13 @@
+main: me.jasonhorkles.expensivedeaths.ExpensiveDeaths
+name: BalanceClearer
+description: Clear someone's balance when they die
+version: %VERSION%
+author: JasonHorkles
+website: https://github.com/SilverstoneMC/ExpensiveDeaths
+api-version: 1.17
+depend:
+  - Vault
+
+permissions:
+  balanceclearer.bypass:
+    default: op
