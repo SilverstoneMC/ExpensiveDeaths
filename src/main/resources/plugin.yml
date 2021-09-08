@@ -1,5 +1,5 @@
 main: me.jasonhorkles.expensivedeaths.ExpensiveDeaths
-name: BalanceClearer
+name: ExpensiveDeaths
 description: Clear someone's balance when they die
 version: %VERSION%
 author: JasonHorkles
@@ -8,6 +8,14 @@ api-version: 1.17
 depend:
   - Vault
 
+commands:
+  edrl:
+    aliases: [ expensivedeathsrl, expensivedeathsreload ]
+    description: "Reload the plugin"
+    permission: expensivedeaths.reload
+
 permissions:
-  balanceclearer.bypass:
+  expensivedeaths.bypass:
+    default: op
+  expensivedeaths.reload:
     default: op
