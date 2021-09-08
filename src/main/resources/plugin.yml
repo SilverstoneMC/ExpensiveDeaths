@@ -16,6 +16,6 @@ commands:
 
 permissions:
   expensivedeaths.bypass:
-    default: op
+    default: false
   expensivedeaths.reload:
     default: op
