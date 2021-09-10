@@ -1,2 +1,4 @@
 # ExpensiveDeaths
-Clear people's balances when they die!
+See the Spigot page at https://www.spigotmc.org/resources/expensivedeaths.96065/
+
+Get support in our Discord server at https://discord.gg/qcTzC9nMQD
