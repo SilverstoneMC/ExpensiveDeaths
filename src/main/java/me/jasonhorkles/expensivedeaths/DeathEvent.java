@@ -2,6 +2,7 @@ package me.jasonhorkles.expensivedeaths;
 
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -9,6 +10,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.text.DecimalFormat;
+import java.util.concurrent.ThreadLocalRandom;
 
 @SuppressWarnings("ConstantConditions")
 public class DeathEvent implements Listener {
@@ -35,8 +37,15 @@ public class DeathEvent implements Listener {
                 result = econ.withdrawPlayer(event.getEntity(), econ.getBalance(event.getEntity()));
 
             } else if (option.contains("%")) {
-                result = econ.withdrawPlayer(event.getEntity(),
-                    (Double.parseDouble(option.replace("%", "")) / 100) * econ.getBalance(event.getEntity()));
+                if (option.contains("-")) {
+                    double min = Double.parseDouble(option.replaceAll("-.*", ""));
+                    double max = Double.parseDouble(option.replaceAll(".*-", "").replace("%", ""));
+                    double r = ThreadLocalRandom.current().nextDouble(min, max + 1);
+                    result = econ.withdrawPlayer(event.getEntity(), (r / 100) * econ.getBalance(event.getEntity()));
+                } else {
+                    result = econ.withdrawPlayer(event.getEntity(),
+                        (Double.parseDouble(option.replace("%", "")) / 100) * econ.getBalance(event.getEntity()));
+                }
 
             } else {
                 result = econ.withdrawPlayer(event.getEntity(), Double.parseDouble(option));
@@ -47,6 +56,12 @@ public class DeathEvent implements Listener {
                     ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("death-message")
                         .replace("{MONEY}", String.valueOf(format.format(result.amount)))
                         .replace("{BALANCE}", String.valueOf(format.format(result.balance)))));
+
+
+            for (String cmd : plugin.getConfig().getStringList("bonus.console-commands")) {
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("{PLAYER}", event.getEntity().getName())
+                    .replace("{DISPLAYNAME}", event.getEntity().getDisplayName()));
+            }
         }
     }
 }

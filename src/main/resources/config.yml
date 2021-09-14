@@ -7,6 +7,7 @@ bypass-message: "&aYou didn't lose money because you're special!"
 # How much should we take from the player when they die?
 # Valid options are:
 # amount-to-take: 15% - takes 15% of their balance
+# amount-to-take: 0-15% - takes random amount between 0-15% of their balance
 # amount-to-take: ALL - resets their balance to 0
 # amount-to-take: 100.00 - takes $100 from their balance
 amount-to-take: 0.00
@@ -14,3 +15,13 @@ amount-to-take: 0.00
 # The format to use for displaying currencies
 # The current format is used by most countries
 currency-format: "#,##0.00"
+
+
+
+# Additional features not related to economy
+bonus:
+  # Use {PLAYER} for the player
+  # Use {DISPLAYNAME} for the player's display name
+  console-commands:
+    #- command 1
+    #- command 2
