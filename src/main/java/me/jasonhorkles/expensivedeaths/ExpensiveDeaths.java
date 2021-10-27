@@ -42,14 +42,10 @@ public class ExpensiveDeaths extends JavaPlugin implements Listener, CommandExec
     }
 
     private void setupEconomy() {
-        if (Bukkit.getPluginManager().getPlugin("Vault") == null) {
-            return;
-        }
+        if (Bukkit.getPluginManager().getPlugin("Vault") == null) return;
 
         RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
-        if (rsp == null) {
-            return;
-        }
+        if (rsp == null) return;
         econ = rsp.getProvider();
     }
 }

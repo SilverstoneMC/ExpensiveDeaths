@@ -33,23 +33,16 @@ public class DeathEvent implements Listener {
             String option = plugin.getConfig().getString("amount-to-take");
             DecimalFormat format = new DecimalFormat(plugin.getConfig().getString("currency-format"));
 
-            if (option.equalsIgnoreCase("ALL")) {
+            if (option.equalsIgnoreCase("ALL"))
                 result = econ.withdrawPlayer(event.getEntity(), econ.getBalance(event.getEntity()));
-
-            } else if (option.contains("%")) {
-                if (option.contains("-")) {
-                    double min = Double.parseDouble(option.replaceAll("-.*", ""));
-                    double max = Double.parseDouble(option.replaceAll(".*-", "").replace("%", ""));
-                    double r = ThreadLocalRandom.current().nextDouble(min, max + 1);
-                    result = econ.withdrawPlayer(event.getEntity(), (r / 100) * econ.getBalance(event.getEntity()));
-                } else {
-                    result = econ.withdrawPlayer(event.getEntity(),
-                        (Double.parseDouble(option.replace("%", "")) / 100) * econ.getBalance(event.getEntity()));
-                }
-
-            } else {
-                result = econ.withdrawPlayer(event.getEntity(), Double.parseDouble(option));
-            }
+            else if (option.contains("%")) if (option.contains("-")) {
+                double min = Double.parseDouble(option.replaceAll("-.*", ""));
+                double max = Double.parseDouble(option.replaceAll(".*-", "").replace("%", ""));
+                double r = ThreadLocalRandom.current().nextDouble(min, max + 1);
+                result = econ.withdrawPlayer(event.getEntity(), (r / 100) * econ.getBalance(event.getEntity()));
+            } else result = econ.withdrawPlayer(event.getEntity(),
+                (Double.parseDouble(option.replace("%", "")) / 100) * econ.getBalance(event.getEntity()));
+            else result = econ.withdrawPlayer(event.getEntity(), Double.parseDouble(option));
 
             if (!plugin.getConfig().getString("death-message").isBlank())
                 event.getEntity().sendMessage(
@@ -58,10 +51,9 @@ public class DeathEvent implements Listener {
                         .replace("{BALANCE}", String.valueOf(format.format(result.balance)))));
 
 
-            for (String cmd : plugin.getConfig().getStringList("bonus.console-commands")) {
+            for (String cmd : plugin.getConfig().getStringList("bonus.console-commands"))
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("{PLAYER}", event.getEntity().getName())
                     .replace("{DISPLAYNAME}", event.getEntity().getDisplayName()));
-            }
         }
     }
 }
