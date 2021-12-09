@@ -4,7 +4,7 @@ description: Clear someone's balance when they die
 version: %VERSION%
 author: JasonHorkles
 website: https://github.com/SilverstoneMC/ExpensiveDeaths
-api-version: 1.17
+api-version: 1.16.5
 depend:
   - Vault
 
