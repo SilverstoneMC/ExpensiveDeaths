@@ -10,18 +10,26 @@ bypass-message: "&aYou didn't lose money because you're special!"
 # amount-to-take: 0-15% - takes random amount between 0-15% of their balance
 # amount-to-take: ALL - resets their balance to 0
 # amount-to-take: 100.00 - takes $100 from their balance
-amount-to-take: 0.00
+amount-to-take: 1000.00
 
 # The format to use for displaying currencies
-# The current format is used by most countries
+# The current format is used by most countries and likely doesn't need touched
 currency-format: "#,##0.00"
+
+# The format to use for currency symbols
+# For 1,234.50 use US
+# For 1.234,50 use DE
+# For 1'234,50 use CH
+# Or see https://www.iso.org/obp for all Alpha-2 country codes
+currency-country: US
 
 
 
 # Additional features not related to economy
 bonus:
+  # Commands run by console when a player dies
   # Use {PLAYER} for the player
   # Use {DISPLAYNAME} for the player's display name
   console-commands:
-    #- command 1
+  #- command 1
     #- command 2

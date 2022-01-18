@@ -2,6 +2,7 @@ package me.jasonhorkles.expensivedeaths;
 
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
+import org.apache.commons.lang.LocaleUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
@@ -10,6 +11,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.concurrent.ThreadLocalRandom;
 
 @SuppressWarnings("ConstantConditions")
@@ -32,6 +34,8 @@ public class DeathEvent implements Listener {
             EconomyResponse result;
             String option = plugin.getConfig().getString("amount-to-take");
             DecimalFormat format = new DecimalFormat(plugin.getConfig().getString("currency-format"));
+            format.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(
+                LocaleUtils.toLocale("en_" + plugin.getConfig().getString("currency-country"))));
 
             if (option.equalsIgnoreCase("ALL"))
                 result = econ.withdrawPlayer(event.getEntity(), econ.getBalance(event.getEntity()));
