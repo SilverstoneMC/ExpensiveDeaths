@@ -31,5 +31,5 @@ bonus:
   # Use {PLAYER} for the player
   # Use {DISPLAYNAME} for the player's display name
   console-commands:
-  #- command 1
-    #- command 2
+  #- "command 1"
+  #- "command 2"
