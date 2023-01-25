@@ -14,7 +14,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.concurrent.ThreadLocalRandom;
 
-@SuppressWarnings("ConstantConditions")
+@SuppressWarnings("DataFlowIssue")
 public class DeathEvent implements Listener {
     private final Economy econ = ExpensiveDeaths.getInstance().getEconomy();
 
