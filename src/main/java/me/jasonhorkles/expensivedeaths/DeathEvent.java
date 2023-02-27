@@ -32,36 +32,38 @@ public class DeathEvent implements Listener {
         if (player.hasPermission("expensivedeaths.bypass")) {
             if (!plugin.getConfig().getString("bypass-message").isBlank()) player.sendMessage(
                 ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("bypass-message")));
-        } else {
-            EconomyResponse result;
-            String option = plugin.getConfig().getString("amount-to-take");
-            DecimalFormat format = new DecimalFormat(plugin.getConfig().getString("currency-format"));
-            format.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(
-                LocaleUtils.toLocale("en_" + plugin.getConfig().getString("currency-country"))));
-
-            if (option.equalsIgnoreCase("ALL")) result = econ.withdrawPlayer(player, econ.getBalance(player));
-            else if (option.contains("%")) if (option.contains("-")) {
-                double min = Double.parseDouble(option.replaceAll("-.*", ""));
-                double max = Double.parseDouble(option.replaceAll(".*-", "").replace("%", ""));
-                double r = ThreadLocalRandom.current().nextDouble(min, max + 1);
-                result = econ.withdrawPlayer(player, (r / 100) * econ.getBalance(player));
-            } else result = econ.withdrawPlayer(player,
-                (Double.parseDouble(option.replace("%", "")) / 100) * econ.getBalance(player));
-            else result = econ.withdrawPlayer(player, Double.parseDouble(option));
-
-            if (!plugin.getConfig().getString("death-message").isBlank()) player.sendMessage(
-                ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("death-message")
-                    .replace("{MONEY}", String.valueOf(format.format(result.amount)))
-                    .replace("{BALANCE}", String.valueOf(format.format(result.balance)))));
-
-
-            for (String cmd : plugin.getConfig().getStringList("bonus.console-commands"))
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("{PLAYER}", player.getName())
-                    .replace("{DISPLAYNAME}", player.getDisplayName()));
-
-            for (String cmd : plugin.getConfig().getStringList("bonus.player-commands"))
-                player.performCommand(cmd.replace("{PLAYER}", player.getName())
-                    .replace("{DISPLAYNAME}", player.getDisplayName()));
+            return;
         }
+
+        EconomyResponse result;
+        String option = plugin.getConfig().getString("amount-to-take");
+        DecimalFormat format = new DecimalFormat(plugin.getConfig().getString("currency-format"));
+        format.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(
+            LocaleUtils.toLocale("en_" + plugin.getConfig().getString("currency-country"))));
+
+        if (option.equalsIgnoreCase("ALL")) result = econ.withdrawPlayer(player, econ.getBalance(player));
+        else if (option.contains("%")) if (option.contains("-")) {
+            double min = Double.parseDouble(option.replaceAll("-.*", ""));
+            double max = Double.parseDouble(option.replaceAll(".*-", "").replace("%", ""));
+            double r = ThreadLocalRandom.current().nextDouble(min, max + 1);
+            result = econ.withdrawPlayer(player, (r / 100) * econ.getBalance(player));
+        } else result = econ.withdrawPlayer(player,
+            (Double.parseDouble(option.replace("%", "")) / 100) * econ.getBalance(player));
+        else result = econ.withdrawPlayer(player, Double.parseDouble(option));
+
+        if (!plugin.getConfig().getString("death-message").isBlank()) player.sendMessage(
+            ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("death-message")
+                .replace("{MONEY}", String.valueOf(format.format(result.amount)))
+                .replace("{BALANCE}", String.valueOf(format.format(result.balance)))));
+
+
+        for (String cmd : plugin.getConfig().getStringList("bonus.console-commands"))
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+                cmd.replace("{PLAYER}", player.getName()).replace("{DISPLAYNAME}", player.getDisplayName()));
+
+        for (String cmd : plugin.getConfig().getStringList("bonus.player-commands"))
+            player.performCommand(
+                cmd.replace("{PLAYER}", player.getName()).replace("{DISPLAYNAME}", player.getDisplayName()));
+
     }
 }
