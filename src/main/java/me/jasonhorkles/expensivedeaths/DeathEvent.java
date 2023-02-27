@@ -24,7 +24,7 @@ public class DeathEvent implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void deathEvent(PlayerDeathEvent event) {
         if (event.getEntity().hasPermission("expensivedeaths.bypass")) {
             if (!plugin.getConfig().getString("bypass-message").isBlank())
