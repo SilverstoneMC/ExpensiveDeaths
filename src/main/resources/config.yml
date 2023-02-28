@@ -27,15 +27,25 @@ currency-country: US
 
 # Additional features not related to economy
 bonus:
-  # Use {PLAYER} for the player
+  # Use {PLAYER} for the player's username
   # Use {DISPLAYNAME} for the player's display name
   
   # Commands run by console when a player dies
-  console-commands:
+  console-commands-on-death:
   #- "command 1"
   #- "command 2"
   
   # Commands run by the player when they die
-  player-commands:
+  player-commands-on-death:
+  #- "command 1"
+  #- "command 2"
+
+  # Commands run by console when the player respawns
+  console-commands-on-respawn:
+  #- "command 1"
+  #- "command 2"
+
+  # Commands run by the player when they respawn
+  player-commands-on-respawn:
   #- "command 1"
   #- "command 2"

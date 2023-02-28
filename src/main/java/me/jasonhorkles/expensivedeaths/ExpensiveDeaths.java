@@ -11,15 +11,13 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class ExpensiveDeaths extends JavaPlugin implements Listener, CommandExecutor {
-
-    private Economy econ;
-    private static ExpensiveDeaths instance;
-
     public static ExpensiveDeaths getInstance() {
         return instance;
     }
 
-    // Startup
+    private Economy econ;
+    private static ExpensiveDeaths instance;
+
     @Override
     public void onEnable() {
         instance = this;
@@ -28,6 +26,7 @@ public class ExpensiveDeaths extends JavaPlugin implements Listener, CommandExec
         saveDefaultConfig();
 
         getServer().getPluginManager().registerEvents(new DeathEvent(this), this);
+        getServer().getPluginManager().registerEvents(new RespawnEvent(this), this);
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {

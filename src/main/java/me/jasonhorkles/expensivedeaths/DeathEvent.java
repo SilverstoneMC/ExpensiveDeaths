@@ -17,13 +17,12 @@ import java.util.concurrent.ThreadLocalRandom;
 
 @SuppressWarnings("DataFlowIssue")
 public class DeathEvent implements Listener {
-    private final Economy econ = ExpensiveDeaths.getInstance().getEconomy();
-
-    private final JavaPlugin plugin;
-
     public DeathEvent(JavaPlugin plugin) {
         this.plugin = plugin;
     }
+
+    private final Economy econ = ExpensiveDeaths.getInstance().getEconomy();
+    private final JavaPlugin plugin;
 
     @EventHandler(ignoreCancelled = true)
     public void deathEvent(PlayerDeathEvent event) {
@@ -57,11 +56,11 @@ public class DeathEvent implements Listener {
                 .replace("{BALANCE}", String.valueOf(format.format(result.balance)))));
 
 
-        for (String cmd : plugin.getConfig().getStringList("bonus.console-commands"))
+        for (String cmd : plugin.getConfig().getStringList("bonus.console-commands-on-death"))
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
                 cmd.replace("{PLAYER}", player.getName()).replace("{DISPLAYNAME}", player.getDisplayName()));
 
-        for (String cmd : plugin.getConfig().getStringList("bonus.player-commands"))
+        for (String cmd : plugin.getConfig().getStringList("bonus.player-commands-on-death"))
             player.performCommand(
                 cmd.replace("{PLAYER}", player.getName()).replace("{DISPLAYNAME}", player.getDisplayName()));
 

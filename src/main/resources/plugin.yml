@@ -1,6 +1,6 @@
 main: me.jasonhorkles.expensivedeaths.ExpensiveDeaths
 name: ExpensiveDeaths
-description: Clear someone's balance when they die
+description: Steal money when people die
 version: %VERSION%
 author: JasonHorkles
 website: https://github.com/SilverstoneMC/ExpensiveDeaths
