@@ -16,26 +16,23 @@ import java.util.regex.Pattern;
 
 public abstract class Execution {
 
-    private static final Supplier<Boolean> USE_PLACEHOLDERAPI = Suppliers.memoize(() -> Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI"));
+    private static final Supplier<Boolean> USE_PLACEHOLDERAPI = Suppliers.memoize(
+        () -> Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI"));
     private static final Pattern KEY_CHANCE = Pattern.compile("(?i)(test-?)?(chance|prob(ability)?)");
     private static final Pattern KEY_CANCEL = Pattern.compile("(?i)break|stop|cancel(ling)?");
     private static final Pattern KEY_PERMISSION = Pattern.compile("(?i)(meet-?)?perm(ission)?");
-    private static final Pattern KEY_EXECUTION = Pattern.compile("(?i)run|(run-?)?(cmds?|commands?)|execut(e|ions?)");
+    private static final Pattern KEY_EXECUTION = Pattern.compile(
+        "(?i)run|(run-?)?(cmds?|commands?)|execut(e|ions?)");
 
     public static Execution of(Object object) {
-        if (object instanceof String) {
-            return new SimpleExecution((String) object);
-        } else if (object instanceof Iterable) {
+        if (object instanceof String) return new SimpleExecution((String) object);
+        else if (object instanceof Iterable) {
             final List<Execution> executions = new ArrayList<>();
             for (Object o : (Iterable<?>) object) {
                 final Execution execution = of(o);
-                if (execution != null) {
-                    executions.add(execution);
-                }
+                if (execution != null) executions.add(execution);
             }
-            if (!executions.isEmpty()) {
-                return new AdvancedExecution(0.0, false, null, executions);
-            }
+            if (!executions.isEmpty()) return new AdvancedExecution(0.0, false, null, executions);
         } else if (object instanceof Map) {
             double chance = 0.0;
             boolean cancelling = false;
@@ -44,30 +41,22 @@ public abstract class Execution {
             for (Map.Entry<?, ?> entry : ((Map<?, ?>) object).entrySet()) {
                 final String key = String.valueOf(entry.getKey());
                 final Object value = entry.getValue();
-                if (KEY_CHANCE.matcher(key).matches()) {
-                    try {
-                        chance = Double.parseDouble(String.valueOf(value));
-                    } catch (NumberFormatException ignored) { }
-                } else if (KEY_CANCEL.matcher(key).matches()) {
+                if (KEY_CHANCE.matcher(key).matches()) try {
+                    chance = Double.parseDouble(String.valueOf(value));
+                } catch (NumberFormatException ignored) {
+                }
+                else if (KEY_CANCEL.matcher(key).matches())
                     cancelling = String.valueOf(value).equalsIgnoreCase("true");
-                } else if (KEY_PERMISSION.matcher(key).matches()) {
-                    permission = String.valueOf(value);
-                } else if (KEY_EXECUTION.matcher(key).matches()) {
+                else if (KEY_PERMISSION.matcher(key).matches()) permission = String.valueOf(value);
+                else if (KEY_EXECUTION.matcher(key).matches()) {
                     final Execution execution = of(value);
-                    if (execution != null) {
-                        executions.add(execution);
-                    }
+                    if (execution != null) executions.add(execution);
                 }
             }
-            if (!executions.isEmpty()) {
+            if (!executions.isEmpty())
                 return new AdvancedExecution(chance, cancelling, permission, executions);
-            }
         }
         return null;
-    }
-
-    public boolean run(Player player, Player agent, Function<String, String> parser) {
-        return run(player, agent, parser, false);
     }
 
     public boolean run(Player player, Player agent, Function<String, String> parser, boolean console) {
@@ -78,11 +67,10 @@ public abstract class Execution {
 
     public void run(CommandSender sender, Player player, Player agent, String cmd, Function<String, String> parser) {
         String s = parser.apply(cmd);
-        if (USE_PLACEHOLDERAPI.get() && ExpensiveDeaths.getInstance().getConfig().getBoolean("parse-placeholders", false)) {
+        if (USE_PLACEHOLDERAPI.get() && ExpensiveDeaths.getInstance().getConfig()
+            .getBoolean("parse-placeholders", false)) {
             s = PlaceholderAPI.setPlaceholders(player, s);
-            if (agent != null) {
-                s = PlaceholderAPI.setBracketPlaceholders(agent, s);
-            }
+            if (agent != null) s = PlaceholderAPI.setBracketPlaceholders(agent, s);
         }
         Bukkit.dispatchCommand(sender, s);
     }
@@ -93,10 +81,6 @@ public abstract class Execution {
 
         public SimpleExecution(String cmd) {
             this.cmd = cmd;
-        }
-
-        public String getCmd() {
-            return cmd;
         }
 
         @Override
@@ -120,18 +104,6 @@ public abstract class Execution {
             this.executions = executions;
         }
 
-        public double getChance() {
-            return chance;
-        }
-
-        public String getPermission() {
-            return permission;
-        }
-
-        public List<Execution> getExecutions() {
-            return executions;
-        }
-
         public boolean isCancelling() {
             return cancelling;
         }
@@ -141,27 +113,17 @@ public abstract class Execution {
         }
 
         public boolean meetPermission(Player player) {
-            if (this.permission != null) {
-                for (String s : this.permission.split(";")) {
-                    if (!player.hasPermission(s)) {
-                        return false;
-                    }
-                }
-            }
+            if (this.permission != null) for (String s : this.permission.split(";"))
+                if (!player.hasPermission(s)) return false;
             return true;
         }
 
         @Override
         public boolean run(CommandSender sender, Player player, Player agent, Function<String, String> parser) {
-            if (!testChance() || !meetPermission(player)) {
-                return false;
-            }
+            if (!testChance() || !meetPermission(player)) return false;
 
-            for (Execution execution : executions) {
-                if (execution.run(sender, player, agent, parser)) {
-                    break;
-                }
-            }
+            for (Execution execution : executions)
+                if (execution.run(sender, player, agent, parser)) break;
 
             return isCancelling();
         }

@@ -40,6 +40,7 @@ public class ExpensiveDeaths extends JavaPlugin implements Listener, CommandExec
         saveDefaultConfig();
         reloadConfig();
         loadExecutions();
+        
         sender.sendMessage(ChatColor.GREEN + "ExpensiveDeaths reloaded!");
         return true;
     }
@@ -50,9 +51,7 @@ public class ExpensiveDeaths extends JavaPlugin implements Listener, CommandExec
 
     public void run(Execution.Type type, Player player, Player agent, Function<String, String> parser) {
         final Execution execution = this.executions.get(type);
-        if (execution != null) {
-            execution.run(player, agent, parser, type.isConsole());
-        }
+        if (execution != null) execution.run(player, agent, parser, type.isConsole());
     }
 
     private void setupEconomy() {
@@ -76,8 +75,6 @@ public class ExpensiveDeaths extends JavaPlugin implements Listener, CommandExec
 
     private void loadExecution(Execution.Type type, String key) {
         final Execution execution = Execution.of(getConfig().get("bonus." + key));
-        if (execution != null) {
-            this.executions.put(type, execution);
-        }
+        if (execution != null) this.executions.put(type, execution);
     }
 }

@@ -52,20 +52,18 @@ public class DeathEvent implements Listener {
         final String money = String.valueOf(format.format(result.amount));
         final String balance = String.valueOf(format.format(result.balance));
         if (!plugin.getConfig().getString("death-message").isBlank()) player.sendMessage(
-            ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("death-message")
-                .replace("{MONEY}", money)
-                .replace("{BALANCE}", balance)));
+            ChatColor.translateAlternateColorCodes('&',
+                plugin.getConfig().getString("death-message").replace("{MONEY}", money)
+                    .replace("{BALANCE}", balance)));
 
 
         Player killer = player.getKiller();
         final Function<String, String> parser = str -> {
             String s = str.replace("{PLAYER}", player.getName())
-                    .replace("{DISPLAYNAME}", player.getDisplayName())
-                    .replace("{MONEY}", money)
-                    .replace("{BALANCE}", balance);
-            if (killer != null) {
-                s = s.replace("{KILLER}", killer.getName()).replace("{KILLER_DISPLAYNAME}", killer.getDisplayName());
-            }
+                .replace("{DISPLAYNAME}", player.getDisplayName()).replace("{MONEY}", money)
+                .replace("{BALANCE}", balance);
+            if (killer != null) s = s.replace("{KILLER}", killer.getName())
+                .replace("{KILLER_DISPLAYNAME}", killer.getDisplayName());
             return s;
         };
 
