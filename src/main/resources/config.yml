@@ -23,12 +23,17 @@ currency-format: "#,##0.00"
 # Or see https://www.iso.org/obp for all Alpha-2 country codes
 currency-country: US
 
+# Set true to parse placeholders from PlaceholderAPI inside commands
+parse-placeholders: false
+
 
 
 # Additional features not related to economy
 bonus:
   # Use {PLAYER} for the player's username
   # Use {DISPLAYNAME} for the player's display name
+  # Use {MONEY} to display the money they lost
+  # Use {BALANCE} to display the player's remaining balance
   
   # Commands run by console when a player dies
   console-commands-on-death:
@@ -37,6 +42,16 @@ bonus:
   
   # Commands run by the player when they die
   player-commands-on-death:
+  #- "command 1"
+  #- "command 2"
+
+  # Commands run by console when a player was killed by other player
+  console-commands-on-kill:
+  #- "command 1"
+  #- "command 2"
+
+  # Commands run by the player when they die by other player
+  player-commands-on-kill:
   #- "command 1"
   #- "command 2"
 
