@@ -1,36 +1,32 @@
 package me.jasonhorkles.expensivedeaths;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.function.Function;
+
 public class RespawnEvent implements Listener {
-    public RespawnEvent(JavaPlugin plugin) {
+    public RespawnEvent(ExpensiveDeaths plugin) {
         this.plugin = plugin;
     }
 
-    private final JavaPlugin plugin;
+    private final ExpensiveDeaths plugin;
 
     @EventHandler(ignoreCancelled = true)
     public void respawnEvent(PlayerRespawnEvent event) {
+        final Player player = event.getPlayer();
         new BukkitRunnable() {
             @Override
             public void run() {
-                Player player = event.getPlayer();
-                if (player.hasPermission("expensivedeaths.bypass")) return;
+                if (!player.isOnline() || player.hasPermission("expensivedeaths.bypass")) return;
 
-                for (String cmd : plugin.getConfig().getStringList("bonus.console-commands-on-respawn"))
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-                        cmd.replace("{PLAYER}", player.getName())
-                            .replace("{DISPLAYNAME}", player.getDisplayName()));
-
-                for (String cmd : plugin.getConfig().getStringList("bonus.player-commands-on-respawn"))
-                    player.performCommand(cmd.replace("{PLAYER}", player.getName())
-                        .replace("{DISPLAYNAME}", player.getDisplayName()));
+                final Function<String, String> parser = s -> s.replace("{PLAYER}", player.getName())
+                        .replace("{DISPLAYNAME}", player.getDisplayName());
+                plugin.run(Execution.Type.RESPAWN_CONSOLE, player, null, parser);
+                plugin.run(Execution.Type.RESPAWN_PLAYER, player, null, parser);
             }
         }.runTaskLater(plugin, 5);
     }

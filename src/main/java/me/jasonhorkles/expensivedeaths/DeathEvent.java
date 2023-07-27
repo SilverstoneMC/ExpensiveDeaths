@@ -3,26 +3,25 @@ package me.jasonhorkles.expensivedeaths;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.apache.commons.lang.LocaleUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Function;
 
 @SuppressWarnings("DataFlowIssue")
 public class DeathEvent implements Listener {
-    public DeathEvent(JavaPlugin plugin) {
+    public DeathEvent(ExpensiveDeaths plugin) {
         this.plugin = plugin;
     }
 
     private final Economy econ = ExpensiveDeaths.getInstance().getEconomy();
-    private final JavaPlugin plugin;
+    private final ExpensiveDeaths plugin;
 
     @EventHandler(ignoreCancelled = true)
     public void deathEvent(PlayerDeathEvent event) {
@@ -50,19 +49,31 @@ public class DeathEvent implements Listener {
             (Double.parseDouble(option.replace("%", "")) / 100) * econ.getBalance(player));
         else result = econ.withdrawPlayer(player, Double.parseDouble(option));
 
+        final String money = String.valueOf(format.format(result.amount));
+        final String balance = String.valueOf(format.format(result.balance));
         if (!plugin.getConfig().getString("death-message").isBlank()) player.sendMessage(
             ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("death-message")
-                .replace("{MONEY}", String.valueOf(format.format(result.amount)))
-                .replace("{BALANCE}", String.valueOf(format.format(result.balance)))));
+                .replace("{MONEY}", money)
+                .replace("{BALANCE}", balance)));
 
 
-        for (String cmd : plugin.getConfig().getStringList("bonus.console-commands-on-death"))
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-                cmd.replace("{PLAYER}", player.getName()).replace("{DISPLAYNAME}", player.getDisplayName()));
+        Player killer = player.getKiller();
+        final Function<String, String> parser = str -> {
+            String s = str.replace("{PLAYER}", player.getName())
+                    .replace("{DISPLAYNAME}", player.getDisplayName())
+                    .replace("{MONEY}", money)
+                    .replace("{BALANCE}", balance);
+            if (killer != null) {
+                s = s.replace("{KILLER}", killer.getName()).replace("{KILLER_DISPLAYNAME}", killer.getDisplayName());
+            }
+            return s;
+        };
 
-        for (String cmd : plugin.getConfig().getStringList("bonus.player-commands-on-death"))
-            player.performCommand(
-                cmd.replace("{PLAYER}", player.getName()).replace("{DISPLAYNAME}", player.getDisplayName()));
-
+        plugin.run(Execution.Type.DEATH_CONSOLE, player, killer, parser);
+        plugin.run(Execution.Type.DEATH_PLAYER, player, killer, parser);
+        if (killer != null) {
+            plugin.run(Execution.Type.KILL_CONSOLE, player, killer, parser);
+            plugin.run(Execution.Type.KILL_PLAYER, player, killer, parser);
+        }
     }
 }
