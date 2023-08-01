@@ -10,7 +10,7 @@ bypass-message: "&aYou didn't lose money because you're special!"
 # amount-to-take: 0-15% - takes random amount between 0-15% of their balance
 # amount-to-take: ALL - resets their balance to 0
 # amount-to-take: 100.00 - takes $100 from their balance
-amount-to-take: 1000.00
+amount-to-take: 0.00
 
 # The format to use for displaying currencies
 # The current format is used by most countries and likely doesn't need touched
@@ -23,37 +23,58 @@ currency-format: "#,##0.00"
 # Or see https://www.iso.org/obp for all Alpha-2 country codes
 currency-country: US
 
-# Set true to parse placeholders from PlaceholderAPI inside commands
-parse-placeholders: false
 
 
+###############################################
+#                BONUS SETTINGS               #
+###############################################
 
 # Additional features not related to economy
 bonus:
-  # Use {PLAYER} for the player's username
-  # Use {DISPLAYNAME} for the player's display name
-  # Use {MONEY} to display the money they lost
-  # Use {BALANCE} to display the player's remaining balance
-  
+  # Parse PlaceholderAPI placeholders inside commands
+  parse-placeholders: false
+
+  # Internal placeholders:
+  # {PLAYER} - the player's username
+  # {DISPLAYNAME} - the player's display name
+
+  # --- Death --- #
+
+  # Additional placeholders:
+  # {MONEY} - how much money the player lost
+  # {BALANCE} - the player's remaining balance
+
   # Commands run by console when a player dies
   console-commands-on-death:
   #- "command 1"
   #- "command 2"
-  
+
   # Commands run by the player when they die
   player-commands-on-death:
   #- "command 1"
   #- "command 2"
 
-  # Commands run by console when a player was killed by other player
-  console-commands-on-kill:
+
+  # --- Killed --- #
+
+  # Additional placeholders:
+  # {MONEY} - how much money the killed player lost
+  # {BALANCE} - the killed player's remaining balance
+  # {KILLER} - the killer's username
+  # {KILLER_DISPLAYNAME} - the killer's display name
+
+  # Commands run by console when a player was killed by another player
+  console-commands-on-killed:
   #- "command 1"
   #- "command 2"
 
-  # Commands run by the player when they die by other player
-  player-commands-on-kill:
+  # Commands run by the player when they die from another player
+  player-commands-on-killed:
   #- "command 1"
   #- "command 2"
+
+
+  # --- Respawn --- #
 
   # Commands run by console when the player respawns
   console-commands-on-respawn:
@@ -64,3 +85,57 @@ bonus:
   player-commands-on-respawn:
   #- "command 1"
   #- "command 2"
+
+
+  ###############################################
+  #          ADVANCED COMMAND EXECUTION         #
+  ###############################################
+
+  # In addition to executing normal commands, you can also
+  # require permissions and set chances for commands to run
+
+  # Permission: the permission(s) to check when executing the command
+  #  Use a ; to require multiple permissions (AND statement)
+  #  Don't include to not perform any permission checks
+  #
+  # Chance: the percent chance that the command will run, in the form of a decimal
+  #
+  # Break: if true, the command will break out of the list
+  # and not execute any more commands under the "run" key
+  #
+  # Run: the commands to run
+  
+  example:
+    # A regular command with no advanced features as shown above
+    - "command 1"
+
+    # Only one command under the permissions "perm.1;perm.2" will be executed
+    - permission: 'perm.1;perm.2'
+      run:
+        - chance: 0.10
+          break: true
+          run: "command with 10%"
+        - chance: 0.30
+          break: true
+          run: "command with 30%"
+        - chance: 0.40
+          break: true
+          run: "command with 40%"
+        - "command with remaining 20%"
+
+    # Each command has a 50% chance of running, with no permission required
+    - run:
+        - chance: 0.50
+          break: false
+          run: "command 1 with 50%"
+        - chance: 0.50
+          break: false
+          run: "command 2 with 50%"
+
+    # "command 1" will always run given the permission "perm.1",
+    # but "command 2" only has a 40% chance of running given the same permission
+    - permission: 'perm.1'
+      run:
+        - "command 1"
+        - chance: 0.40
+          run: "command 2"

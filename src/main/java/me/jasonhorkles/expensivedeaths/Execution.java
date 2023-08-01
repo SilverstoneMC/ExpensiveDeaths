@@ -15,7 +15,6 @@ import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 public abstract class Execution {
-
     private static final Supplier<Boolean> USE_PLACEHOLDERAPI = Suppliers.memoize(
         () -> Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI"));
     private static final Pattern KEY_CHANCE = Pattern.compile("(?i)(test-?)?(chance|prob(ability)?)");
@@ -59,8 +58,8 @@ public abstract class Execution {
         return null;
     }
 
-    public boolean run(Player player, Player agent, Function<String, String> parser, boolean console) {
-        return run(console ? Bukkit.getConsoleSender() : player, player, agent, parser);
+    public void run(Player player, Player agent, Function<String, String> parser, boolean console) {
+        run(console ? Bukkit.getConsoleSender() : player, player, agent, parser);
     }
 
     public abstract boolean run(CommandSender sender, Player player, Player agent, Function<String, String> parser);
@@ -68,7 +67,7 @@ public abstract class Execution {
     public void run(CommandSender sender, Player player, Player agent, String cmd, Function<String, String> parser) {
         String s = parser.apply(cmd);
         if (USE_PLACEHOLDERAPI.get() && ExpensiveDeaths.getInstance().getConfig()
-            .getBoolean("parse-placeholders", false)) {
+            .getBoolean("bonus.parse-placeholders")) {
             s = PlaceholderAPI.setPlaceholders(player, s);
             if (agent != null) s = PlaceholderAPI.setBracketPlaceholders(agent, s);
         }
@@ -76,7 +75,6 @@ public abstract class Execution {
     }
 
     public static class SimpleExecution extends Execution {
-
         private final String cmd;
 
         public SimpleExecution(String cmd) {
@@ -91,7 +89,6 @@ public abstract class Execution {
     }
 
     public static class AdvancedExecution extends Execution {
-
         private final double chance;
         private final boolean cancelling;
         private final String permission;
@@ -114,7 +111,7 @@ public abstract class Execution {
 
         public boolean meetPermission(Player player) {
             if (this.permission != null) for (String s : this.permission.split(";"))
-                if (!player.hasPermission(s)) return false;
+                if (!player.hasPermission(s.trim())) return false;
             return true;
         }
 

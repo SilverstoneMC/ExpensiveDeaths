@@ -40,7 +40,7 @@ public class ExpensiveDeaths extends JavaPlugin implements Listener, CommandExec
         saveDefaultConfig();
         reloadConfig();
         loadExecutions();
-        
+
         sender.sendMessage(ChatColor.GREEN + "ExpensiveDeaths reloaded!");
         return true;
     }
@@ -67,8 +67,8 @@ public class ExpensiveDeaths extends JavaPlugin implements Listener, CommandExec
         this.executions.clear();
         loadExecution(Execution.Type.DEATH_CONSOLE, "console-commands-on-death");
         loadExecution(Execution.Type.DEATH_PLAYER, "player-commands-on-death");
-        loadExecution(Execution.Type.KILL_CONSOLE, "console-commands-on-kill");
-        loadExecution(Execution.Type.KILL_PLAYER, "player-commands-on-kill");
+        loadExecution(Execution.Type.KILL_CONSOLE, "console-commands-on-killed");
+        loadExecution(Execution.Type.KILL_PLAYER, "player-commands-on-killed");
         loadExecution(Execution.Type.RESPAWN_CONSOLE, "console-commands-on-respawn");
         loadExecution(Execution.Type.RESPAWN_PLAYER, "player-commands-on-respawn");
     }
