@@ -1,5 +1,5 @@
 # ExpensiveDeaths
-Spigot page: https://www.spigotmc.org/resources/expensivedeaths.96065
+Spigot page: https://www.spigotmc.org/resources/96065
 
 Hangar page: https://hangar.papermc.io/JasonHorkles/ExpensiveDeaths
 
