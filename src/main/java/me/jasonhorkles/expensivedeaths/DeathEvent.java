@@ -65,7 +65,7 @@ public class DeathEvent implements Listener {
         final String money = String.valueOf(format.format(result.amount));
         final String balance = String.valueOf(format.format(result.balance));
         if (!plugin.getConfig().getString("death-message").isBlank())
-            player.sendMessage(ChatColor.translateAlternateColorCodes(
+            if (!money.equals("0.00")) player.sendMessage(ChatColor.translateAlternateColorCodes(
                 '&',
                 plugin.getConfig().getString("death-message").replace("{MONEY}", money)
                     .replace("{BALANCE}", balance)));
