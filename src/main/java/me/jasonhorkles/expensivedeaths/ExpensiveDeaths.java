@@ -1,7 +1,7 @@
 package me.jasonhorkles.expensivedeaths;
 
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.Bukkit;
+import net.milkbowl.vault.permission.Permission;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -21,6 +21,7 @@ public class ExpensiveDeaths extends JavaPlugin implements Listener, CommandExec
     }
 
     private Economy econ;
+    private Permission perms;
     private final Map<Execution.Type, Execution> executions = new HashMap<>();
     private static ExpensiveDeaths instance;
 
@@ -29,6 +30,7 @@ public class ExpensiveDeaths extends JavaPlugin implements Listener, CommandExec
         instance = this;
 
         setupEconomy();
+        setupPermissions();
         saveDefaultConfig();
         loadExecutions();
 
@@ -49,18 +51,27 @@ public class ExpensiveDeaths extends JavaPlugin implements Listener, CommandExec
         return econ;
     }
 
+    public Permission getPermissions() {
+        return perms;
+    }
+
     public void run(Execution.Type type, Player player, Player agent, Function<String, String> parser) {
         final Execution execution = this.executions.get(type);
         if (execution != null) execution.run(player, agent, parser, type.isConsole());
     }
 
     private void setupEconomy() {
-        if (Bukkit.getPluginManager().getPlugin("Vault") == null) return;
-
         RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager()
             .getRegistration(Economy.class);
         if (rsp == null) return;
         econ = rsp.getProvider();
+    }
+
+    private void setupPermissions() {
+        RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(
+            Permission.class);
+        if (rsp == null) return;
+        perms = rsp.getProvider();
     }
 
     private void loadExecutions() {

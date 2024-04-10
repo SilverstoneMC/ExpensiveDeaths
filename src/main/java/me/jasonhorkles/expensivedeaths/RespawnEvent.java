@@ -23,8 +23,8 @@ public class RespawnEvent implements Listener {
             public void run() {
                 if (!player.isOnline() || player.hasPermission("expensivedeaths.bypass")) return;
 
-                final Function<String, String> parser = s -> s.replace("{PLAYER}", player.getName())
-                    .replace("{DISPLAYNAME}", player.getDisplayName());
+                final Function<String, String> parser = s -> s.replace("{PLAYER}", player.getName()).replace("{DISPLAYNAME}",
+                    player.getDisplayName());
                 plugin.run(Execution.Type.RESPAWN_CONSOLE, player, null, parser);
                 plugin.run(Execution.Type.RESPAWN_PLAYER, player, null, parser);
             }

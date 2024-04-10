@@ -5,12 +5,18 @@ death-message: "&cYou lost ${MONEY} because you died!"
 bypass-message: "&aYou didn't lose money because you're special!"
 
 # How much should we take from the player when they die?
-# Valid options are:
-# amount-to-take: 15% - takes 15% of their balance
-# amount-to-take: 0-15% - takes random amount between 0-15% of their balance
-# amount-to-take: ALL - resets their balance to 0
-# amount-to-take: 100.00 - takes $100 from their balance
-amount-to-take: 0.00
+# Valid examples:
+#  15% - takes 15% of their balance
+#  0-15% - takes random amount between 0-15% of their balance
+#  ALL - resets their balance to 0
+#  100.00 - takes $100 from their balance
+#
+# A different value can be specified for any groups in your permission plugin
+# Will use the default value if a player is not in any of the defined groups
+# Group names must be lowercase
+amount-to-take:
+  default: 0.00
+  #millionaire: 30%
 
 # The format to use for displaying currencies
 # The current format is used by most countries and likely doesn't need touched
