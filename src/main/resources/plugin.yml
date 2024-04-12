@@ -19,5 +19,10 @@ commands:
 permissions:
   expensivedeaths.bypass:
     default: false
+    description: Bypass money withdrawals
   expensivedeaths.reload:
     default: op
+    description: Reload the plugin
+  entityclearer.updatenotifs:
+    default: op
+    description: Notifications when there is an update available

@@ -6,7 +6,7 @@
 
     <groupId>net.silverstonemc</groupId>
     <artifactId>ExpensiveDeaths</artifactId>
-    <version>1.4.0</version>
+    <version>1.5.0-beta</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -118,6 +118,12 @@
             <artifactId>placeholderapi</artifactId>
             <version>2.11.5</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20240303</version>
         </dependency>
     </dependencies>
 
