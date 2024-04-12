@@ -1,4 +1,4 @@
-package me.jasonhorkles.expensivedeaths;
+package net.silverstonemc.expensivedeaths;
 
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;

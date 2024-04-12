@@ -1,4 +1,4 @@
-package me.jasonhorkles.expensivedeaths;
+package net.silverstonemc.expensivedeaths;
 
 import com.google.common.base.Suppliers;
 import me.clip.placeholderapi.PlaceholderAPI;
