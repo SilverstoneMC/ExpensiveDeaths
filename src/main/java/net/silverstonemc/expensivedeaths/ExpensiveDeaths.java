@@ -50,7 +50,7 @@ public class ExpensiveDeaths extends JavaPlugin implements Listener, CommandExec
                 if (latest == null) return;
                 if (!current.equals(latest)) new UpdateChecker(instance).logUpdate(current, latest);
             }
-        }.runTaskLaterAsynchronously(this, 1L);
+        }.runTaskLaterAsynchronously(this, 2L);
     }
 
     public boolean onCommand(CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
