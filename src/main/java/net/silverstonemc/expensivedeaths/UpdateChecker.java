@@ -6,6 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 import java.io.InputStream;
@@ -38,7 +39,7 @@ public class UpdateChecker implements Listener {
             }.runTaskAsynchronously(plugin);
     }
 
-    public String getLatestVersion() {
+    public @Nullable String getLatestVersion() {
         String pluginName = plugin.getDescription().getName();
 
         try {

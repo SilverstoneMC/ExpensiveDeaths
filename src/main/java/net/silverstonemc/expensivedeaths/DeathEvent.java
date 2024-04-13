@@ -62,8 +62,8 @@ public class DeathEvent implements Listener {
         else result = econ.withdrawPlayer(player, Double.parseDouble(option));
 
         // Send the death message
-        final String money = String.valueOf(format.format(result.amount));
-        final String balance = String.valueOf(format.format(result.balance));
+        String money = String.valueOf(format.format(result.amount));
+        String balance = String.valueOf(format.format(result.balance));
         if (!plugin.getConfig().getString("death-message").isBlank())
             if (!money.equals("0.00")) player.sendMessage(ChatColor.translateAlternateColorCodes(
                 '&',
@@ -72,7 +72,7 @@ public class DeathEvent implements Listener {
 
         // Run the executions
         Player killer = player.getKiller();
-        final Function<String, String> parser = str -> {
+        Function<String, String> parser = str -> {
             String s = str.replace("{PLAYER}", player.getName()).replace("{DISPLAYNAME}",
                 player.getDisplayName()).replace("{MONEY}", money).replace("{BALANCE}", balance);
             if (killer != null) s = s.replace("{KILLER}", killer.getName()).replace("{KILLER_DISPLAYNAME}",

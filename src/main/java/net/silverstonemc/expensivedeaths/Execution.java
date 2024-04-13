@@ -5,6 +5,7 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +24,12 @@ public abstract class Execution {
     private static final Pattern KEY_EXECUTION = Pattern.compile(
         "(?i)run|(run-?)?(cmds?|commands?)|execut(e|ions?)");
 
-    public static Execution of(Object object) {
+    public static @Nullable Execution of(Object object) {
         if (object instanceof String) return new SimpleExecution((String) object);
         else if (object instanceof Iterable) {
-            final List<Execution> executions = new ArrayList<>();
+            List<Execution> executions = new ArrayList<>();
             for (Object o : (Iterable<?>) object) {
-                final Execution execution = of(o);
+                Execution execution = of(o);
                 if (execution != null) executions.add(execution);
             }
             if (!executions.isEmpty()) return new AdvancedExecution(0.0, false, null, executions);
@@ -36,10 +37,10 @@ public abstract class Execution {
             double chance = 0.0;
             boolean cancelling = false;
             String permission = null;
-            final List<Execution> executions = new ArrayList<>();
+            List<Execution> executions = new ArrayList<>();
             for (Map.Entry<?, ?> entry : ((Map<?, ?>) object).entrySet()) {
-                final String key = String.valueOf(entry.getKey());
-                final Object value = entry.getValue();
+                String key = String.valueOf(entry.getKey());
+                Object value = entry.getValue();
                 if (KEY_CHANCE.matcher(key).matches()) try {
                     chance = Double.parseDouble(String.valueOf(value));
                 } catch (NumberFormatException ignored) {
@@ -48,7 +49,7 @@ public abstract class Execution {
                     cancelling = String.valueOf(value).equalsIgnoreCase("true");
                 else if (KEY_PERMISSION.matcher(key).matches()) permission = String.valueOf(value);
                 else if (KEY_EXECUTION.matcher(key).matches()) {
-                    final Execution execution = of(value);
+                    Execution execution = of(value);
                     if (execution != null) executions.add(execution);
                 }
             }
@@ -85,7 +86,7 @@ public abstract class Execution {
 
         @Override
         public boolean run(CommandSender sender, Player player, Player agent, Function<String, String> parser) {
-            this.run(sender, player, agent, cmd, parser);
+            run(sender, player, agent, cmd, parser);
             return false;
         }
     }
@@ -103,16 +104,12 @@ public abstract class Execution {
             this.executions = executions;
         }
 
-        public boolean isCancelling() {
-            return cancelling;
-        }
-
         public boolean testChance() {
-            return this.chance == 0.0 || ThreadLocalRandom.current().nextDouble() <= this.chance;
+            return chance == 0.0 || ThreadLocalRandom.current().nextDouble() <= chance;
         }
 
         public boolean meetPermission(Player player) {
-            if (this.permission != null) for (String s : this.permission.split(";"))
+            if (permission != null) for (String s : permission.split(";"))
                 if (!player.hasPermission(s.trim())) return false;
             return true;
         }
@@ -124,7 +121,7 @@ public abstract class Execution {
             for (Execution execution : executions)
                 if (execution.run(sender, player, agent, parser)) break;
 
-            return isCancelling();
+            return cancelling;
         }
     }
 
