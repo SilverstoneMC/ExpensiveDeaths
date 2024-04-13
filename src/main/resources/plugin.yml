@@ -23,6 +23,6 @@ permissions:
   expensivedeaths.reload:
     default: op
     description: Reload the plugin
-  entityclearer.updatenotifs:
+  expensivedeaths.updatenotifs:
     default: op
     description: Notifications when there is an update available
