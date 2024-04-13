@@ -6,7 +6,7 @@
 
     <groupId>net.silverstonemc</groupId>
     <artifactId>ExpensiveDeaths</artifactId>
-    <version>1.5.0-beta</version>
+    <version>1.5.0</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
