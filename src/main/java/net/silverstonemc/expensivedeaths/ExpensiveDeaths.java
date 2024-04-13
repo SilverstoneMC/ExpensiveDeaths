@@ -11,6 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,6 +38,7 @@ public class ExpensiveDeaths extends JavaPlugin implements Listener, CommandExec
 
         getServer().getPluginManager().registerEvents(new DeathEvent(this), this);
         getServer().getPluginManager().registerEvents(new RespawnEvent(this), this);
+        getServer().getPluginManager().registerEvents(new UpdateChecker(this), this);
 
         // Log version update
         new BukkitRunnable() {
@@ -48,10 +50,10 @@ public class ExpensiveDeaths extends JavaPlugin implements Listener, CommandExec
                 if (latest == null) return;
                 if (!current.equals(latest)) new UpdateChecker(instance).logUpdate(current, latest);
             }
-        }.runTaskAsynchronously(this);
+        }.runTaskLaterAsynchronously(this, 1L);
     }
 
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public boolean onCommand(CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
         saveDefaultConfig();
         reloadConfig();
         loadExecutions();
@@ -69,7 +71,7 @@ public class ExpensiveDeaths extends JavaPlugin implements Listener, CommandExec
     }
 
     public void run(Execution.Type type, Player player, Player agent, Function<String, String> parser) {
-        final Execution execution = this.executions.get(type);
+        Execution execution = executions.get(type);
         if (execution != null) execution.run(player, agent, parser, type.isConsole());
     }
 
@@ -88,7 +90,7 @@ public class ExpensiveDeaths extends JavaPlugin implements Listener, CommandExec
     }
 
     private void loadExecutions() {
-        this.executions.clear();
+        executions.clear();
         loadExecution(Execution.Type.DEATH_CONSOLE, "console-commands-on-death");
         loadExecution(Execution.Type.DEATH_PLAYER, "player-commands-on-death");
         loadExecution(Execution.Type.KILL_CONSOLE, "console-commands-on-killed");
@@ -98,7 +100,7 @@ public class ExpensiveDeaths extends JavaPlugin implements Listener, CommandExec
     }
 
     private void loadExecution(Execution.Type type, String key) {
-        final Execution execution = Execution.of(getConfig().get("bonus." + key));
-        if (execution != null) this.executions.put(type, execution);
+        Execution execution = Execution.of(getConfig().get("bonus." + key));
+        if (execution != null) executions.put(type, execution);
     }
 }

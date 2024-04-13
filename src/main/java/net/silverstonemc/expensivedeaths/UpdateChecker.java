@@ -22,6 +22,7 @@ public class UpdateChecker implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onJoin(PlayerJoinEvent event) {
         String pluginName = plugin.getDescription().getName();
+
         if (event.getPlayer().hasPermission(pluginName.toLowerCase() + ".updatenotifs"))
             // Check for updates asynchronously
             new BukkitRunnable() {
