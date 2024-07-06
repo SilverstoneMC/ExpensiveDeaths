@@ -26,7 +26,7 @@ currency-format: "#,##0.00"
 # For 1,234.50 use US
 # For 1.234,50 use DE
 # For 1'234,50 use CH
-# Or see https://www.iso.org/obp for all Alpha-2 country codes
+# Or see https://www.iban.com/country-codes for all Alpha-2 country codes
 currency-country: US
 
 
